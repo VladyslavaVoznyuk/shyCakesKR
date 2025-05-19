@@ -1,0 +1,53 @@
+.wrapper {
+    padding: 40px;
+}
+
+.heading {
+    font-size: 2.5rem;
+    color: #7bdcf5;
+    margin-bottom: 30px;
+}
+
+.product {
+    display: flex;
+    align-items: flex-start;
+    gap: 40px;
+}
+
+.image {
+    border-radius: 12px;
+    max-width: 100%;
+}
+
+.info {
+    max-width: 500px;
+}
+
+.info h2 {
+    font-size: 2rem;
+    color: #0366b0;
+    margin-bottom: 10px;
+}
+
+.price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0366b0;
+    margin-top: 10px;
+}
+
+.orderButton {
+    margin-top: 20px;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+
+.orderButton:hover {
+    background-color: #ff3b2e;
+}
