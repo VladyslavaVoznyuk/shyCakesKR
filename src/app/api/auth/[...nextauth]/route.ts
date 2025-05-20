@@ -1,7 +1,7 @@
-import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
-import GitHubProvider from "next-auth/providers/github";
-
+import NextAuth from 'next-auth';
+import GoogleProvider from 'next-auth/providers/google';
+import GitHubProvider from 'next-auth/providers/github';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
 export const authOptions = {
     providers: [
@@ -13,17 +13,25 @@ export const authOptions = {
             clientId: process.env.GITHUB_ID!,
             clientSecret: process.env.GITHUB_SECRET!,
         }),
+        CredentialsProvider({
+            name: 'Credentials',
+            credentials: {
+                email: { label: "Email", type: "email" },
+                password: { label: "Password", type: "password" }
+            },
+            async authorize(credentials) {
+                // Реалізуй перевірку логіна пароля з MongoDB
+                return null; // або { id, name, email }
+            }
+        })
     ],
     pages: {
-        signIn: "/signin",
-        newUser: "/register",
+        signIn: '/signin',
+        newUser: '/register',
     },
     secret: process.env.NEXTAUTH_SECRET,
-    jwt: {
-        secret: process.env.NEXTAUTH_SECRET,
-    },
-    debug: true,
 };
 
 const handler = NextAuth(authOptions);
+
 export { handler as GET, handler as POST };

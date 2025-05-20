@@ -8,7 +8,7 @@ export default function PortfolioPage() {
       <PageBannerSimple
         currentPage='Портфоліо'
         title='Портфоліо'
-        text='Портфоліо' 
+
         image="/images/cataloge-banner.jpg"
       />
       <PortfolioComponent />

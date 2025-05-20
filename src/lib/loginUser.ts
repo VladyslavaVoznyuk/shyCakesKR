@@ -1,5 +1,5 @@
 import { connectToDB } from './mongodb'
-import User from '@/models/User'
+import User from '@/models/user'
 import bcrypt from 'bcrypt'
 
 export async function loginUser(email: string, password: string) {

@@ -6,7 +6,6 @@ export default function ContactPage() {
       <PageBannerSimple 
         currentPage='Контакти'
         title='Контакти'
-        text='Контакти' 
         image="/images/cataloge-banner.jpg"
       />
       <div className="max-w-screen-md mx-auto px-4 py-8">
