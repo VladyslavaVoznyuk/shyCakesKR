@@ -20,9 +20,19 @@ export const authOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                // Реалізуй перевірку логіна пароля з MongoDB
-                return null; // або { id, name, email }
+                const user = await db.collection('users').findOne({ email: credentials.email });
+
+                if (user && user.password === credentials.password) {
+                    return {
+                        id: user._id.toString(),
+                        name: user.name,
+                        email: user.email,
+                    };
+                }
+
+                return null; // неправильний логін
             }
+
         })
     ],
     pages: {

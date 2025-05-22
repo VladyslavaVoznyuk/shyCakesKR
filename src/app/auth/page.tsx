@@ -55,7 +55,7 @@ export default function LoginPage() {
             <p className="text-center">або увійти через</p>
             <div className="flex flex-col gap-2">
                 <button
-                    onClick={() => signIn('google')}
+                    onClick={() => signIn('google', { callbackUrl: '/' })}
                     className="bg-white border px-4 py-2 rounded hover:bg-gray-100"
                 >
                     Google
