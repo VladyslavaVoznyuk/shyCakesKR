@@ -1,0 +1,22 @@
+name: Test
+
+on:
+  pull-request:
+    branches:
+      -'master'
+
+jobs:
+  test:
+    name: Test my App
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+          node-version:'22'
+          cache:'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm test
