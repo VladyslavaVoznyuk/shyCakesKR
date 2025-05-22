@@ -29,7 +29,7 @@ export async function POST(req: Request) {
         });
 
         return NextResponse.json({ message: 'Користувач створений', user: newUser }, { status: 201 });
-    } catch (error) {
+    } catch  {
         return NextResponse.json({ message: 'Помилка при реєстрації' }, { status: 500 });
     }
 }

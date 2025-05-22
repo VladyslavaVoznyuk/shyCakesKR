@@ -8,7 +8,7 @@ export async function GET() {
     try {
         const reviews = await Review.find().sort({ createdAt: -1 });
         return NextResponse.json(reviews);
-    } catch (error) {
+    } catch {
         return NextResponse.json({ message: 'Помилка при завантаженні відгуків' }, { status: 500 });
     }
 }

@@ -6,7 +6,8 @@ export default function AboutPage() {
         <div className={styles.page}>
             <PageBannerSimple
                 currentPage="Про мене"
-
+                title='тест'
+                text='тест'
                 image="/images/cataloge-banner.jpg"
             />
 

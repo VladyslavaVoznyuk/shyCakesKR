@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import styles from './reviews.module.css'
-import PageBannerSimple from '@/components/PageBannerSimple/pagebannersimple'
+
 
 interface Review {
     _id: string
