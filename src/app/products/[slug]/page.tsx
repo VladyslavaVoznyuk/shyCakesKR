@@ -27,7 +27,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
                     <p className="text-lg mb-4">{product.description}</p>
                     <p className="text-2xl font-semibold text-cyan-700 mb-6">{product.price} ₴ / кг</p>
 
-                    <form action="/checkout">
+                    <form action="/auth">
                         <button
                             type="submit"
                             className="bg-cyan-500 text-white px-6 py-3 rounded-lg hover:bg-cyan-600 transition"

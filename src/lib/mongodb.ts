@@ -23,5 +23,5 @@ if (process.env.NODE_ENV === 'development') {
 
 export async function connectToDB() {
     const client = await clientPromise;
-    return client.db(); // за замовчуванням — перша база з URI
+    return client.db();
 }

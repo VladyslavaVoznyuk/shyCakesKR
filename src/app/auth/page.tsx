@@ -26,7 +26,7 @@ export default function LoginPage() {
 
     return (
         <div className="max-w-md mx-auto mt-10 space-y-4">
-            <h1 className="text-2xl font-bold">Вхід</h1>
+            <h1 className="text-2xl font-bold text-center">Увійдіть для оформлення замовлення</h1>
 
             <form action={handleLogin} className="space-y-4">
                 <input
@@ -55,13 +55,13 @@ export default function LoginPage() {
             <p className="text-center">або увійти через</p>
             <div className="flex flex-col gap-2">
                 <button
-                    onClick={() => signIn('google', { callbackUrl: '/' })}
+                    onClick={() => signIn('google', { callbackUrl: '/checkout' })}
                     className="bg-white border px-4 py-2 rounded hover:bg-gray-100"
                 >
                     Google
                 </button>
                 <button
-                    onClick={() => signIn('github')}
+                    onClick={() => signIn('github' , { callbackUrl: '/checkout' })}
                     className="bg-white border px-4 py-2 rounded hover:bg-gray-100"
                 >
                     GitHub
