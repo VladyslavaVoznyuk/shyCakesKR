@@ -1,12 +1,12 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { connectToDB } from '@/lib/mongodb';
+import { AddToCartButton } from '@/components/AddToCartButton';
+
 
 export default async function ProductPage({ params }: { params: { slug: string } }) {
-    const { slug } = params;
-
     const db = await connectToDB();
-    const product = await db.collection('products').findOne({ slug });
+    const product = await db.collection('products').findOne({ slug: params.slug });
 
     if (!product) return notFound();
 
@@ -27,14 +27,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
                     <p className="text-lg mb-4">{product.description}</p>
                     <p className="text-2xl font-semibold text-cyan-700 mb-6">{product.price} ₴ / кг</p>
 
-                    <form action="/auth">
-                        <button
-                            type="submit"
-                            className="bg-cyan-500 text-white px-6 py-3 rounded-lg hover:bg-cyan-600 transition"
-                        >
-                            Замовити
-                        </button>
-                    </form>
+                    <AddToCartButton product={product} />
                 </div>
             </div>
         </div>
