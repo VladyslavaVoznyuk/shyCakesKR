@@ -30,7 +30,7 @@ export const authOptions = {
                     };
                 }
 
-                return null; // неправильний логін
+                return null;
             }
 
         })
