@@ -2,9 +2,13 @@
 
 import { signIn } from 'next-auth/react'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
     const [error, setError] = useState<string | null>(null)
+    const searchParams = useSearchParams()
+
+    const callbackUrl = searchParams.get('callbackUrl') || '/'
 
     async function handleLogin(formData: FormData) {
         const email = formData.get('email') as string
@@ -14,13 +18,15 @@ export default function LoginPage() {
             email,
             password,
             redirect: false,
+            callbackUrl,
         })
 
         if (res?.error) {
             setError('Невірний email або пароль')
         } else {
             setError(null)
-            window.location.href = '/'
+            // після успішного логіну переходимо на callbackUrl
+            window.location.href = callbackUrl
         }
     }
 
@@ -55,13 +61,13 @@ export default function LoginPage() {
             <p className="text-center">або увійти через</p>
             <div className="flex flex-col gap-2">
                 <button
-                    onClick={() => signIn('google', { callbackUrl: '/checkout' })}
+                    onClick={() => signIn('google', { callbackUrl })}
                     className="bg-white border px-4 py-2 rounded hover:bg-gray-100"
                 >
                     Google
                 </button>
                 <button
-                    onClick={() => signIn('github' , { callbackUrl: '/checkout' })}
+                    onClick={() => signIn('github', { callbackUrl })}
                     className="bg-white border px-4 py-2 rounded hover:bg-gray-100"
                 >
                     GitHub

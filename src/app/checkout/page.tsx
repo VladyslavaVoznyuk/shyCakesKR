@@ -1,68 +1,95 @@
 'use client';
+
 import { useEffect, useState } from 'react';
-import styles from './checkout.module.css';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useSession, signIn } from 'next-auth/react';
+
+type CartItem = {
+    slug: string;
+    name: string;
+    price: number;
+    image: string;
+    quantity: number;
+};
 
 export default function CheckoutPage() {
-    const [cartItems, setCartItems] = useState<any[]>([]);
-    const [formData, setFormData] = useState({
-        name: '',
-        email: '',
-        phone: '',
-    });
+    const [cart, setCart] = useState<CartItem[]>([]);
+    const { data: session, status } = useSession();
+    const router = useRouter();
 
     useEffect(() => {
         const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-        setCartItems(storedCart);
+        setCart(storedCart);
     }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    };
+    if (status === 'loading') {
+        return <p className="p-6 text-center">Завантаження...</p>;
+    }
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+    if (status === 'unauthenticated') {
+        signIn(undefined, { callbackUrl: '/checkout' });
+        return null;
+    }
 
-        console.log('Замовлення:', { ...formData, cartItems });
-        alert('Замовлення відправлено!');
+    const clearCart = () => {
         localStorage.removeItem('cart');
+        setCart([]);
     };
 
-    const totalPrice = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+    const handleCheckout = () => {
+        alert('Дякуємо за замовлення!');
+        clearCart();
+        router.push('/');
+    };
+
+    if (cart.length === 0)
+        return <p className="p-6 text-center">Ваш кошик порожній</p>;
 
     return (
-        <div className={styles.container}>
-            <h1 className={styles.heading}>Ваше замовлення</h1>
-
-            <div className={styles.orderList}>
-                {cartItems.map((item, idx) => (
-                    <div key={idx} className={styles.item}>
-                        <img src={item.image} alt={item.name} className={styles.img} />
-                        <div>
-                            <strong>{item.name}</strong>
-                            <div>Кількість: {item.quantity}</div>
-                            <div>Ціна: {item.price * item.quantity} грн</div>
+        <div className="max-w-5xl mx-auto p-6">
+            <h1 className="text-3xl font-bold mb-6 text-center">Кошик</h1>
+            <ul>
+                {cart.map(item => (
+                    <li key={item.slug} className="flex items-center gap-4 mb-4">
+                        <Image
+                            src={item.image}
+                            alt={item.name}
+                            width={100}
+                            height={100}
+                            className="rounded"
+                        />
+                        <div className="flex-1">
+                            <h2 className="font-semibold">{item.name}</h2>
+                            <p>Ціна: {item.price} ₴</p>
+                            <p>Кількість: {item.quantity}</p>
+                            <p>Разом: {item.price * item.quantity} ₴</p>
                         </div>
-                    </div>
+                    </li>
                 ))}
-                <div className={styles.total}>Сума: {totalPrice} грн</div>
+            </ul>
+
+            <div className="mt-6 text-right text-xl font-semibold">
+                Всього: {total} ₴
             </div>
 
-            <p className={styles.note}>
-                <strong>ВАЖЛИВО!</strong> Замовлення на цілі торти приймаємо за 48 або 72 години до потрібної дати. Якщо ви обрали доставку кур’єром, будь ласка, перевірте <a href="https://www.google.com/maps" target="_blank">на цій карті</a> зону доставки.
-            </p>
+            <div className="flex gap-4 mt-6 justify-center">
+                <button
+                    onClick={clearCart}
+                    className="bg-red-500 text-white px-6 py-3 rounded hover:bg-red-600 transition"
+                >
+                    Очистити кошик
+                </button>
 
-            <form onSubmit={handleSubmit} className={styles.form}>
-                <label>Ваше ім’я та прізвище</label>
-                <input type="text" name="name" required onChange={handleChange} />
-
-                <label>Ваша електронна пошта</label>
-                <input type="email" name="email" required onChange={handleChange} />
-
-                <label>Ваш номер телефону</label>
-                <input type="tel" name="phone" required onChange={handleChange} />
-
-                <button type="submit">Оформити замовлення</button>
-            </form>
+                <button
+                    onClick={handleCheckout}
+                    className="bg-green-600 text-white px-6 py-3 rounded hover:bg-green-700 transition"
+                >
+                    Оформити замовлення
+                </button>
+            </div>
         </div>
     );
 }

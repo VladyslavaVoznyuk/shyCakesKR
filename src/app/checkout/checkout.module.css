@@ -109,3 +109,9 @@
 .button:hover {
     background-color: #1d517f;
 }
+.buttonGroup {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+

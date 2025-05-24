@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { hash } from 'bcrypt';
-import { connectToDB } from '@/lib/mongodb';
+import { connectToDatabase } from '@/lib/mongoose';
 import User from '@/models/user';
 
 export async function POST(req: Request) {
@@ -8,14 +8,14 @@ export async function POST(req: Request) {
         const { name, email, password } = await req.json();
 
         if (!name || !email || !password) {
-            return NextResponse.json({ message: 'Усі поля обовʼязкові' }, { status: 400 });
+            return NextResponse.json({ message: 'Усі поля обовʼязкові', success: false }, { status: 400 });
         }
 
-        await connectToDB();
+        await connectToDatabase();
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return NextResponse.json({ message: 'Користувач з таким email вже існує' }, { status: 409 });
+            return NextResponse.json({ message: 'Користувач з таким email вже існує', success: false }, { status: 409 });
         }
 
         const hashedPassword = await hash(password, 10);
@@ -25,11 +25,15 @@ export async function POST(req: Request) {
             email,
             hashedPassword,
             provider: 'credentials',
-            image: null
+            image: null,
         });
 
-        return NextResponse.json({ message: 'Користувач створений', user: newUser }, { status: 201 });
-    } catch  {
-        return NextResponse.json({ message: 'Помилка при реєстрації' }, { status: 500 });
+        return NextResponse.json(
+            { message: 'Користувач створений', success: true, user: { id: newUser._id, email: newUser.email, name: newUser.name } },
+            { status: 201 }
+        );
+    } catch (error) {
+        console.error('Register error:', error);
+        return NextResponse.json({ message: 'Помилка при реєстрації', success: false }, { status: 500 });
     }
 }

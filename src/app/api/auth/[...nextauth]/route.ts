@@ -2,6 +2,9 @@ import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GitHubProvider from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { compare } from 'bcrypt';
+import { connectToDatabase } from '@/lib/mongoose';
+import User from '@/models/user';
 
 export const authOptions = {
     providers: [
@@ -20,25 +23,45 @@ export const authOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                const user = await db.collection('users').findOne({ email: credentials.email });
+                await connectToDatabase();
+                const user = await User.findOne({ email: credentials?.email });
+                if (!user) return null;
 
-                if (user && user.password === credentials.password) {
-                    return {
-                        id: user._id.toString(),
-                        name: user.name,
-                        email: user.email,
-                    };
-                }
+                const isValid = await compare(credentials!.password, user.hashedPassword);
+                if (!isValid) return null;
 
-                return null;
+                return {
+                    id: user._id.toString(),
+                    name: user.name,
+                    email: user.email,
+                    image: user.image || null,
+                };
             }
-
-        })
+        }),
     ],
+
     pages: {
-        signIn: '/signin',
+        signIn: '/auth/signin',
         newUser: '/register',
     },
+
+    callbacks: {
+        async session({ session, token }) {
+
+            if (!session.user.image) {
+                session.user.image = "/images/default-avatar.jpg";
+            }
+            return session;
+        },
+        async jwt({ token, user }) {
+            if (user) {
+                token.id = user.id;
+                token.image = user.image || null;
+            }
+            return token;
+        },
+    },
+
     secret: process.env.NEXTAUTH_SECRET,
 };
 
