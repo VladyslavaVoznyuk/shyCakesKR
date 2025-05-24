@@ -22,7 +22,12 @@ const config: Config = {
   collectCoverage: true,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
-    // collectCoverageFrom: undefined,
+    collectCoverageFrom: [
+        'src/**/*.{js,ts,jsx,tsx}',
+        '!src/**/*.test.{js,ts,jsx,tsx}',
+        '!**/node_modules/**',
+        '!**/coverage/**',
+    ],
 
   // The directory where Jest should output its coverage files
   coverageDirectory: "coverage",
@@ -44,9 +49,17 @@ const config: Config = {
    ],
 
   // An object that configures minimum threshold enforcement for coverage results
-  // coverageThreshold: undefined,
+    coverageThreshold: {
+        global: {
+            branches: 40,
+            functions: 40,
+            lines: 40,
+            statements: 40,
+        },
+    },
 
-  // A path to a custom dependency extractor
+
+    // A path to a custom dependency extractor
   // dependencyExtractor: undefined,
 
   // Make calling deprecated APIs throw helpful error messages
@@ -92,7 +105,9 @@ const config: Config = {
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
    moduleNameMapper: {
        '^@/(.*)$': '<rootDir>/src/$1',
-     },
+       '\\.(css|scss|sass)$': 'identity-obj-proxy',
+       '\\.(jpg|jpeg|png|gif|webp|svg)$': '<rootDir>/__mocks__/fileMock.js',
+   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -136,9 +151,10 @@ const config: Config = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  // setupFiles: [],
+    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 
-  // A list of paths to modules that run some code to configure or set up the testing framework before each test
+
+    // A list of paths to modules that run some code to configure or set up the testing framework before each test
   // setupFilesAfterEnv: [],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
@@ -148,7 +164,7 @@ const config: Config = {
   // snapshotSerializers: [],
 
   // The test environment that will be used for testing
-  testEnvironment: "node",
+  testEnvironment: "jsdom",
 
   // Options that will be passed to the testEnvironment
   // testEnvironmentOptions: {},

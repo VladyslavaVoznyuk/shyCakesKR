@@ -6,6 +6,14 @@ import { compare } from 'bcrypt';
 import { connectToDatabase } from '@/lib/mongoose';
 import User from '@/models/user';
 
+interface UserType {
+    _id: string;
+    name: string;
+    email: string;
+    hashedPassword: string;
+    image?: string;
+}
+
 export const authOptions = {
     providers: [
         GoogleProvider({
@@ -24,10 +32,13 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 await connectToDatabase();
-                const user = await User.findOne({ email: credentials?.email });
+
+                if (!credentials || !credentials.email || !credentials.password) return null;
+
+                const user = await User.findOne({ email: credentials.email }) as unknown as UserType;
                 if (!user) return null;
 
-                const isValid = await compare(credentials!.password, user.hashedPassword);
+                const isValid = await compare(credentials.password, user.hashedPassword);
                 if (!isValid) return null;
 
                 return {
@@ -47,7 +58,6 @@ export const authOptions = {
 
     callbacks: {
         async session({ session, token }) {
-
             if (!session.user.image) {
                 session.user.image = "/images/default-avatar.jpg";
             }
@@ -66,5 +76,4 @@ export const authOptions = {
 };
 
 const handler = NextAuth(authOptions);
-
 export { handler as GET, handler as POST };

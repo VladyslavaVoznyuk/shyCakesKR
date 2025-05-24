@@ -25,7 +25,6 @@ export default function LoginPage() {
             setError('Невірний email або пароль')
         } else {
             setError(null)
-            // після успішного логіну переходимо на callbackUrl
             window.location.href = callbackUrl
         }
     }

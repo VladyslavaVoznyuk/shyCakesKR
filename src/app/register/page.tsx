@@ -21,56 +21,63 @@ export default function RegisterPage() {
         const data = await res.json()
         setMessage(data.message)
 
-        if (res.status === 201 && data.success) {
+        if (res.status === 201) {
             setIsRegistered(true)
         }
     }
 
     return (
-        <div className="p-10">
-            <h1 className="text-2xl font-bold mb-4">Реєстрація</h1>
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-w-sm">
-                <input
-                    type="text"
-                    placeholder="Ім'я"
-                    className="border p-2"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    required
-                />
-                <input
-                    type="email"
-                    placeholder="Email"
-                    className="border p-2"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    className="border p-2"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded">
-                    Зареєструватися
-                </button>
-            </form>
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+            <div className="bg-white p-10 rounded shadow-md w-full max-w-md">
+                <h1 className="text-2xl font-bold mb-6 text-center">Реєстрація</h1>
+                <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                    <input
+                        type="text"
+                        placeholder="Ім'я"
+                        className="border p-2 rounded"
+                        value={name}
+                        onChange={e => setName(e.target.value)}
+                        required
+                    />
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        className="border p-2 rounded"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        required
+                    />
+                    <input
+                        type="password"
+                        placeholder="Пароль"
+                        className="border p-2 rounded"
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        required
+                    />
+                    <button
+                        type="submit"
+                        className="bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition"
+                    >
+                        Зареєструватися
+                    </button>
+                </form>
 
-            {message && <p className="text-sm text-gray-700 mt-4">{message}</p>}
+                {message && <p className="text-sm text-gray-700 mt-4 text-center">{message}</p>}
 
-            {isRegistered && (
-                <div className="mt-6">
-                    <p className="mb-2 text-green-600 font-semibold">Реєстрація пройшла успішно!</p>
-                    <Link href="/auth/signin">
-                        <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
-                            Увійти
-                        </button>
-                    </Link>
-                </div>
-            )}
+                {isRegistered && (
+                    <div className="mt-6 text-center">
+                        <p className="mb-2 text-green-600 font-semibold">Реєстрація пройшла успішно!</p>
+                        <Link href="/auth/signin" legacyBehavior>
+                            <a>
+                                <button className="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                                    Увійти
+                                </button>
+                            </a>
+                        </Link>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
