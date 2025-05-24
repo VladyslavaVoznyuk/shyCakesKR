@@ -5,8 +5,16 @@ import Link from 'next/link';
 import styles from './catalog.module.css';
 import useProducts from '@/hooks/useProducts';
 
+interface Product {
+    _id: string;
+    slug: string;
+    title: string;
+    price: number;
+    image: string;
+}
+
 export default function CatalogPage() {
-    const products = useProducts();
+    const products: Product[] = useProducts();
 
     return (
         <div>
@@ -17,7 +25,7 @@ export default function CatalogPage() {
                 image="/images/cataloge-banner.jpg"
             />
             <section className={styles.catalog}>
-                {products.map((product: any) => (
+                {products.map((product) => (
                     <div key={product._id} className={styles.card}>
                         <Image
                             src={product.image}
@@ -30,7 +38,6 @@ export default function CatalogPage() {
                         <Link href={`/products/${product.slug}`} className={styles.button}>
                             Перейти
                         </Link>
-
                     </div>
                 ))}
             </section>

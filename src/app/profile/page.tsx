@@ -2,6 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import SignOutButton from './SignOutButton';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default async function ProfilePage() {
     const session = await getServerSession(authOptions);

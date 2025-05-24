@@ -27,8 +27,8 @@ export const authOptions = {
         CredentialsProvider({
             name: 'Credentials',
             credentials: {
-                email: { label: "Email", type: "email" },
-                password: { label: "Password", type: "password" }
+                email: { label: 'Email', type: 'email' },
+                password: { label: 'Password', type: 'password' },
             },
             async authorize(credentials) {
                 await connectToDatabase();
@@ -47,7 +47,7 @@ export const authOptions = {
                     email: user.email,
                     image: user.image || null,
                 };
-            }
+            },
         }),
     ],
 
@@ -57,9 +57,9 @@ export const authOptions = {
     },
 
     callbacks: {
-        async session({ session, token }) {
+        async session({ session }) {
             if (!session.user.image) {
-                session.user.image = "/images/default-avatar.jpg";
+                session.user.image = '/images/default-avatar.jpg';
             }
             return session;
         },

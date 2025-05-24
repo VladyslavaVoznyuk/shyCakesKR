@@ -3,18 +3,29 @@
 import { useSession, signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
-export function AddToCartButton({ product }: { product: any }) {
+interface Product {
+    slug: string;
+    title: string;
+    price: number;
+    image: string;
+}
+
+interface CartItem extends Product {
+    quantity: number;
+}
+
+export function AddToCartButton({ product }: { product: Product }) {
     const { data: session } = useSession();
     const router = useRouter();
 
     const handleOrder = () => {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existingIndex = cart.findIndex((item: any) => item.slug === product.slug);
+        const cart: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
+        const existingIndex = cart.findIndex((item) => item.slug === product.slug);
 
         if (existingIndex !== -1) {
             cart[existingIndex].quantity += 1;
         } else {
-            cart.push({ slug: product.slug, title: product.title, price: product.price, image: product.image, quantity: 1 });
+            cart.push({ ...product, quantity: 1 });
         }
 
         localStorage.setItem('cart', JSON.stringify(cart));

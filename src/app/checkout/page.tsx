@@ -5,13 +5,13 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useSession, signIn } from 'next-auth/react';
 
-type CartItem = {
+interface CartItem {
     slug: string;
     name: string;
     price: number;
     image: string;
     quantity: number;
-};
+}
 
 export default function CheckoutPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
@@ -52,7 +52,7 @@ export default function CheckoutPage() {
         <div className="max-w-5xl mx-auto p-6">
             <h1 className="text-3xl font-bold mb-6 text-center">Кошик</h1>
             <ul>
-                {cart.map(item => (
+                {cart.map((item) => (
                     <li key={item.slug} className="flex items-center gap-4 mb-4">
                         <Image
                             src={item.image}
