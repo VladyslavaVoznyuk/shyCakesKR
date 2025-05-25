@@ -1,10 +1,10 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || 'shy_cakes';
+const uri = process.env.MONGODB_URI || '';
 const options = {};
 
 declare global {
-
+    // eslint-disable-next-line no-var
     var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
