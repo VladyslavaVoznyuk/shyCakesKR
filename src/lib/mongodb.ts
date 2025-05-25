@@ -3,7 +3,12 @@ import { MongoClient } from 'mongodb';
 const uri = process.env.MONGODB_URI || '';
 const options = {};
 
-let client;
+declare global {
+    // eslint-disable-next-line no-var
+    var _mongoClientPromise: Promise<MongoClient> | undefined;
+}
+
+let client: MongoClient;
 let clientPromise: Promise<MongoClient>;
 
 if (!process.env.MONGODB_URI) {
@@ -20,6 +25,7 @@ if (process.env.NODE_ENV === 'development') {
     client = new MongoClient(uri, options);
     clientPromise = client.connect();
 }
+
 export { clientPromise };
 
 export async function connectToDB() {

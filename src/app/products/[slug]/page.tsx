@@ -4,10 +4,18 @@ import { connectToDatabase } from '@/lib/mongoose';
 import { AddToCartButton } from '@/components/AddToCartButton';
 import { Product } from '@/models/Product';
 
+type ProductType = {
+    slug: string;
+    title: string;
+    image: string;
+    description: string;
+    price: number;
+};
+
 export default async function Page({ params }: { params: { slug: string } }) {
     await connectToDatabase();
 
-    const product = await Product.findOne({ slug: params.slug }).lean();
+    const product = await Product.findOne({ slug: params.slug }).lean<ProductType | null>();
 
     if (!product) return notFound();
 

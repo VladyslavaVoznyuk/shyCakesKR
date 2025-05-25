@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Breadcrumbs from '../Breadcrumbs/Breadcrumbs';
 
-export default function PageBannerSimple({ currentPage, title, text, image }: { currentPage: string, title: string, text: string, image: string }) {
+export default function PageBannerSimple({ currentPage, title, text, image }: { currentPage: string, title: string, text?: string, image: string }) {
   return (
     <section className="relative py-20 min-h-[50vh]">
       <Image src={image} alt="Page Banner" quality={100} className="absolute inset-0 object-cover z-0 brightness-[0.45]" fill />

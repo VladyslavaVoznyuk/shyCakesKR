@@ -1,9 +1,11 @@
 import GoogleProvider from 'next-auth/providers/google';
 import GitHubProvider from 'next-auth/providers/github';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { compare } from 'bcrypt';
+import { compare } from 'bcryptjs';
 import { connectToDatabase } from './mongoose';
 import User from '@/models/user';
+import type { Session, User as NextAuthUser } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
 
 export const authOptions = {
     providers: [
@@ -37,7 +39,7 @@ export const authOptions = {
                     name: user.name,
                     email: user.email,
                     image: user.image || null,
-                };
+                } as NextAuthUser;
             },
         }),
     ],
@@ -48,13 +50,22 @@ export const authOptions = {
     },
 
     callbacks: {
-        async session({ session }) {
-            if (!session.user.image) {
+        async session({ session }: { session: Session }) {
+            if (!session.user) {
+                // Якщо user взагалі немає, створюємо дефолтного
+                session.user = {
+                    name: '',
+                    email: '',
+                    image: '/images/default-avatar.jpg',
+                };
+            } else if (!session.user.image) {
+                // Якщо user є, але немає image
                 session.user.image = '/images/default-avatar.jpg';
             }
             return session;
         },
-        async jwt({ token, user }) {
+
+        async jwt({ token, user }: { token: JWT; user?: NextAuthUser }) {
             if (user) {
                 token.id = user.id;
                 token.image = user.image || null;
