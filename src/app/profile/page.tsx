@@ -28,11 +28,12 @@ export default async function ProfilePage() {
             <div className="flex flex-col items-center gap-4">
                 <Image
                     src={session.user?.image ?? '/default-avatar.png'}
-                    alt="Avatar"
+                    alt={session.user?.name ?? 'Аватар'}
                     width={96}
                     height={96}
                     className="rounded-full"
                 />
+
                 <p className="text-xl font-semibold">{session.user?.name}</p>
                 <p className="text-gray-600">{session.user?.email}</p>
 

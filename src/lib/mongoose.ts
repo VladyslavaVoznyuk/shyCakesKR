@@ -11,21 +11,19 @@ interface CachedMongoose {
     promise: Promise<Mongoose> | null;
 }
 
-declare global {
-    // eslint-disable-next-line no-var
-    var mongoose: CachedMongoose | undefined;
-}
+const globalWithMongoose = globalThis as typeof globalThis & {
+    _mongoose?: CachedMongoose;
+};
 
-let cached = global.mongoose;
+const cached: CachedMongoose = globalWithMongoose._mongoose ?? {
+    conn: null,
+    promise: null,
+};
 
-if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null };
-}
+globalWithMongoose._mongoose = cached;
 
 export async function connectToDatabase(): Promise<Mongoose> {
-    if (cached.conn) {
-        return cached.conn;
-    }
+    if (cached.conn) return cached.conn;
 
     if (!cached.promise) {
         cached.promise = mongoose.connect(MONGODB_URI, {

@@ -18,9 +18,9 @@ export function AddToCartButton({ product }: { product: Product }) {
     const { data: session } = useSession();
     const router = useRouter();
 
-    const handleOrder = () => {
+    const handleOrder = (): void => {
         const cart: CartItem[] = JSON.parse(localStorage.getItem('cart') || '[]');
-        const existingIndex = cart.findIndex((item) => item.slug === product.slug);
+        const existingIndex = cart.findIndex((item: CartItem) => item.slug === product.slug);
 
         if (existingIndex !== -1) {
             cart[existingIndex].quantity += 1;

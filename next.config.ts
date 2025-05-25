@@ -2,8 +2,11 @@ import {withSentryConfig} from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+    images: {
+        domains: ['lh3.googleusercontent.com'],
+    },
 };
-
+module.exports = nextConfig;
 export default withSentryConfig(nextConfig, {
 // For all available options, see:
 // https://www.npmjs.com/package/@sentry/webpack-plugin#options
