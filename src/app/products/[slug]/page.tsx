@@ -3,10 +3,8 @@ import Image from 'next/image';
 import { connectToDatabase } from '@/lib/mongoose';
 import { AddToCartButton } from '@/components/AddToCartButton';
 
-interface PageProps {
-    params: {
-        slug: string;
-    };
+interface Params {
+    slug: string;
 }
 
 interface Product {
@@ -14,22 +12,18 @@ interface Product {
     title: string;
     price: number;
     image: string;
-    description?: string;
+    description: string;
 }
 
-export default async function ProductPage({ params }: PageProps) {
+export default async function ProductPage({ params }: { params: Params }) {
     const db = await connectToDatabase();
-
-    const product = (await db
-        .collection('products')
-        .findOne({ slug: params.slug })) as Product | null;
+    const product = await db.collection('products').findOne<Product>({ slug: params.slug });
 
     if (!product) return notFound();
 
     return (
         <div className="p-6 max-w-5xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-center">{product.title}</h1>
-
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
                 <Image
                     src={product.image}
@@ -37,13 +31,10 @@ export default async function ProductPage({ params }: PageProps) {
                     width={500}
                     height={500}
                     className="rounded-xl"
-                    unoptimized
                 />
-
                 <div className="flex-1">
-                    <p className="text-lg mb-4">{product.description || 'Опис відсутній'}</p>
+                    <p className="text-lg mb-4">{product.description}</p>
                     <p className="text-2xl font-semibold text-cyan-700 mb-6">{product.price} ₴</p>
-
                     <AddToCartButton product={product} />
                 </div>
             </div>
