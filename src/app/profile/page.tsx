@@ -1,5 +1,5 @@
 import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { authOptions } from '@/lib/authOptions';
 import SignOutButton from './SignOutButton';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -26,7 +26,7 @@ export default async function ProfilePage() {
             <h1 className="text-3xl font-bold mb-6 text-center">Профіль користувача</h1>
 
             <div className="flex flex-col items-center gap-4">
-                <img
+                <Image
                     src={session.user?.image ?? '/default-avatar.png'}
                     alt="Avatar"
                     width={96}

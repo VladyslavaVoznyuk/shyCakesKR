@@ -15,7 +15,7 @@ interface CartItem {
 
 export default function CheckoutPage() {
     const [cart, setCart] = useState<CartItem[]>([]);
-    const { data: session, status } = useSession();
+    const { status } = useSession();
     const router = useRouter();
 
     useEffect(() => {

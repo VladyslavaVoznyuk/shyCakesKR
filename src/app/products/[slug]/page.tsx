@@ -3,7 +3,13 @@ import Image from 'next/image';
 import { connectToDB } from '@/lib/mongodb';
 import { AddToCartButton } from '@/components/AddToCartButton';
 
-export default async function ProductPage({ params }: { params: { slug: string } }) {
+interface PageProps {
+    params: {
+        slug: string;
+    };
+}
+
+export default async function ProductPage({ params }: PageProps) {
     const db = await connectToDB();
     const product = await db.collection('products').findOne({ slug: params.slug });
 
