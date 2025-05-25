@@ -1,10 +1,10 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI || '';
+const uri = process.env.MONGODB_URI || 'shy_cakes';
 const options = {};
 
 declare global {
-    // eslint-disable-next-line no-var
+
     var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
@@ -30,5 +30,5 @@ export { clientPromise };
 
 export async function connectToDB() {
     const client = await clientPromise;
-    return client.db();
+    return client.db(process.env.MONGODB_DB);
 }

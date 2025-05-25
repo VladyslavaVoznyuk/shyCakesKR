@@ -1,23 +1,23 @@
-import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { connectToDatabase } from '@/lib/mongoose';
+import { Product, IProduct } from '@/models/Product';
+import { notFound } from 'next/navigation';
 import { AddToCartButton } from '@/components/AddToCartButton';
-import { Product } from '@/models/Product';
 
-type ProductType = {
-    slug: string;
-    title: string;
-    image: string;
-    description: string;
-    price: number;
+type Props = {
+    params: {
+        slug: string;
+    };
 };
 
-export default async function Page({ params }: { params: { slug: string } }) {
+export default async function ProductPage({ params }: Props) {
     await connectToDatabase();
 
-    const product = await Product.findOne({ slug: params.slug }).lean<ProductType | null>();
+    const product = await Product.findOne({ slug: params.slug }).lean<IProduct | null>();
 
-    if (!product) return notFound();
+    if (!product) {
+        return notFound();
+    }
 
     return (
         <div className="p-6 max-w-5xl mx-auto">

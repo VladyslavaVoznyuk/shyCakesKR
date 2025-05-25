@@ -1,10 +1,11 @@
 import { NextResponse } from 'next/server';
-import { connectToDB } from '@/lib/mongodb';
+import { connectToDatabase } from '@/lib/mongoose';
+import { Product } from '@/models/Product';
 
 export async function GET() {
     try {
-        const db = await connectToDB();
-        const products = await db.collection('products').find().toArray();
+        await connectToDatabase();
+        const products = await Product.find({}).lean();
         return NextResponse.json(products);
     } catch (error) {
         console.error('Error fetching products:', error);
