@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { connectToDB } from '@/lib/mongodb';
+import { connectToDatabase } from '@/lib/mongoose';
 import { AddToCartButton } from '@/components/AddToCartButton';
 
 interface PageProps {
@@ -9,9 +9,20 @@ interface PageProps {
     };
 }
 
+interface Product {
+    slug: string;
+    title: string;
+    price: number;
+    image: string;
+    description?: string;
+}
+
 export default async function ProductPage({ params }: PageProps) {
-    const db = await connectToDB();
-    const product = await db.collection('products').findOne({ slug: params.slug });
+    const db = await connectToDatabase();
+
+    const product = (await db
+        .collection('products')
+        .findOne({ slug: params.slug })) as Product | null;
 
     if (!product) return notFound();
 
@@ -26,11 +37,12 @@ export default async function ProductPage({ params }: PageProps) {
                     width={500}
                     height={500}
                     className="rounded-xl"
+                    unoptimized
                 />
 
                 <div className="flex-1">
-                    <p className="text-lg mb-4">{product.description}</p>
-                    <p className="text-2xl font-semibold text-cyan-700 mb-6">{product.price} ₴ </p>
+                    <p className="text-lg mb-4">{product.description || 'Опис відсутній'}</p>
+                    <p className="text-2xl font-semibold text-cyan-700 mb-6">{product.price} ₴</p>
 
                     <AddToCartButton product={product} />
                 </div>
