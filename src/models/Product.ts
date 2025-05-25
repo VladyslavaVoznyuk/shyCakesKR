@@ -1,9 +1,12 @@
-import { Schema, models, model } from 'mongoose';
+
+import { Schema, model, models } from 'mongoose';
 
 const ProductSchema = new Schema({
-    title: { type: String, required: true },
-    image: { type: String, required: true },
-    link: { type: String, required: true },
+    title: String,
+    image: String,
+    description: String,
+    slug: String,
+    price: Number,
 });
 
 export const Product = models.Product || model('Product', ProductSchema);

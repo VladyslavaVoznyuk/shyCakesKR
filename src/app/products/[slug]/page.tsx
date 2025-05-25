@@ -2,22 +2,12 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { connectToDatabase } from '@/lib/mongoose';
 import { AddToCartButton } from '@/components/AddToCartButton';
+import { Product } from '@/models/Product';
 
-interface Params {
-    slug: string;
-}
+export default async function Page({ params }: { params: { slug: string } }) {
+    await connectToDatabase();
 
-interface Product {
-    slug: string;
-    title: string;
-    price: number;
-    image: string;
-    description: string;
-}
-
-export default async function ProductPage({ params }: { params: Params }) {
-    const db = await connectToDatabase();
-    const product = await db.collection('products').findOne<Product>({ slug: params.slug });
+    const product = await Product.findOne({ slug: params.slug }).lean();
 
     if (!product) return notFound();
 
