@@ -2,44 +2,34 @@ name: CI/CD for Next.js (shy_cakes)
 
 on:
   push:
-    branches:
-      - master
+    branches: [master]
   pull_request:
-    branches:
-      - master
+    branches: [master]
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: ⬇️ Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: 🟢 Use Node.js 18
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
+          node-version: 18
 
-      - name: Install dependencies
-        run: npm ci
+      - name: 📦 Install dependencies
+        run: npm install
 
-      - name: Lint code
+      - name: 🧪 Run lint
         run: npm run lint
 
-      - name: Type check
-        run: npx tsc --noEmit
+      - name: 🔍 Type check
+        run: npm run type-check
 
-      - name: Run tests
+      - name: 🧪 Run tests
         run: npm test
 
-      - name: Build Next.js app
+      - name: 🔧 Build project
         run: npm run build
-
-      - name: Upload production-ready build files
-        if: success()
-        uses: actions/upload-artifact@v3
-        with:
-          name: next-build
-          path: .next
