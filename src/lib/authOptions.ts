@@ -59,7 +59,6 @@ export const authOptions = {
                     image: '/images/default-avatar.jpg',
                 };
             } else if (!session.user.image) {
-                // Якщо user є, але немає image
                 session.user.image = '/images/default-avatar.jpg';
             }
             return session;

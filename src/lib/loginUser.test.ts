@@ -1,7 +1,7 @@
 import { loginUser } from './loginUser';
 import { connectToDB } from './mongodb';
 import User from '@/models/user';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 
 jest.mock('./mongodb', () => ({
     connectToDB: jest.fn()
@@ -11,7 +11,7 @@ jest.mock('@/models/user', () => ({
     findOne: jest.fn()
 }));
 
-jest.mock('bcrypt', () => ({
+jest.mock('bcryptjs', () => ({
     compare: jest.fn()
 }));
 
