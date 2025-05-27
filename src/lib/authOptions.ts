@@ -52,7 +52,6 @@ export const authOptions = {
     callbacks: {
         async session({ session }: { session: Session }) {
             if (!session.user) {
-                // Якщо user взагалі немає, створюємо дефолтного
                 session.user = {
                     name: '',
                     email: '',
