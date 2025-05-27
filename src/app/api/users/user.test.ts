@@ -1,9 +1,9 @@
-
 import { NextResponse } from 'next/server';
+import type { MongoClient } from 'mongodb';
 
 jest.mock('@/lib/mongodb', () => ({
     clientPromise: {
-        then: jest.fn(), // щоб підтримувати await
+        then: jest.fn(),
     },
 }));
 
@@ -15,6 +15,10 @@ jest.mock('next/server', () => ({
 
 import { clientPromise } from '@/lib/mongodb';
 import { GET } from './route';
+
+const mockedClientPromise = clientPromise as unknown as {
+    then: (cb: (client: MongoClient) => unknown) => unknown;
+};
 
 describe('GET /api/users', () => {
     beforeEach(() => {
@@ -38,7 +42,7 @@ describe('GET /api/users', () => {
             db: jest.fn().mockReturnValue(mockDb),
         };
 
-        (clientPromise as any).then = jest.fn((cb) => cb(mockClient));
+        mockedClientPromise.then = jest.fn((cb) => cb(mockClient as unknown as MongoClient));
 
         (NextResponse.json as jest.Mock).mockImplementation((data) => data);
 
@@ -55,7 +59,7 @@ describe('GET /api/users', () => {
 
     it('повертає 500 при помилці підключення до БД', async () => {
         const error = new Error('Connection failed');
-        (clientPromise as any).then = jest.fn(() => {
+        mockedClientPromise.then = jest.fn(() => {
             throw error;
         });
 
@@ -68,6 +72,9 @@ describe('GET /api/users', () => {
             { error: 'Failed to connect to database' },
             { status: 500 }
         );
-        expect(response).toEqual({ data: { error: 'Failed to connect to database' }, opts: { status: 500 } });
+        expect(response).toEqual({
+            data: { error: 'Failed to connect to database' },
+            opts: { status: 500 },
+        });
     });
 });

@@ -1,4 +1,4 @@
-// src/app/api/auth/register/register.test.ts
+
 import { NextResponse } from 'next/server';
 
 jest.mock('@/lib/mongoose', () => ({
@@ -25,19 +25,21 @@ import User from '@/models/user';
 import { hash } from 'bcryptjs';
 import { POST } from './route';
 
+
+const mockRequest = (body: Record<string, unknown>): Request =>
+    ({
+        json: jest.fn().mockResolvedValue(body),
+    } as unknown as Request);
+
 describe('POST /api/auth/register', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    const mockRequest = (body: any) => ({
-        json: jest.fn().mockResolvedValue(body),
-    } as unknown as Request);
-
     it('повертає 400, якщо не всі поля надані', async () => {
         const req = mockRequest({ name: 'Name', email: '' }); // password відсутній
 
-        const res = await POST(req);
+        await POST(req);
 
         expect(NextResponse.json).toHaveBeenCalledWith(
             { message: 'Усі поля обовʼязкові', success: false },
@@ -51,7 +53,7 @@ describe('POST /api/auth/register', () => {
 
         const req = mockRequest({ name: 'Name', email: 'test@example.com', password: 'pass123' });
 
-        const res = await POST(req);
+        await POST(req);
 
         expect(connectToDatabase).toHaveBeenCalled();
         expect(User.findOne).toHaveBeenCalledWith({ email: 'test@example.com' });
@@ -70,7 +72,7 @@ describe('POST /api/auth/register', () => {
 
         const req = mockRequest({ name: 'Name', email: 'test@example.com', password: 'pass123' });
 
-        const res = await POST(req);
+        await POST(req);
 
         expect(connectToDatabase).toHaveBeenCalled();
         expect(User.findOne).toHaveBeenCalledWith({ email: 'test@example.com' });
@@ -103,7 +105,7 @@ describe('POST /api/auth/register', () => {
 
         const req = mockRequest({ name: 'Name', email: 'test@example.com', password: 'pass123' });
 
-        const res = await POST(req);
+        await POST(req);
 
         expect(connectToDatabase).toHaveBeenCalled();
         expect(NextResponse.json).toHaveBeenCalledWith(
